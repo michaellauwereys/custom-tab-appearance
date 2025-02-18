@@ -138,10 +138,17 @@ function loadRules() {
       buttonsContainer.appendChild(editButton);
       buttonsContainer.appendChild(deleteButton);
       
-      ruleElement.innerHTML = `
-        <strong>${rule.matchType}:</strong> ${rule.pattern}<br>
-        <strong>New Title:</strong> ${rule.newTitle}
-      `;
+      const matchTypeLabel = document.createElement('strong');
+      matchTypeLabel.textContent = `${rule.matchType}:`;
+      ruleElement.appendChild(matchTypeLabel);
+      ruleElement.appendChild(document.createTextNode(` ${rule.pattern}`));
+      ruleElement.appendChild(document.createElement('br'));
+
+      const titleLabel = document.createElement('strong');
+      titleLabel.textContent = 'New Title:';
+      ruleElement.appendChild(titleLabel);
+      ruleElement.appendChild(document.createTextNode(` ${rule.newTitle}`));
+
       ruleElement.appendChild(buttonsContainer);
       rulesList.appendChild(ruleElement);
     });

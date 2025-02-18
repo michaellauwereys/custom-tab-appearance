@@ -65,7 +65,14 @@ document.addEventListener('DOMContentLoaded', function() {
   // Create custom upload option first
   const customDiv = document.createElement('div');
   customDiv.className = 'emoji-item custom-upload';
-  customDiv.innerHTML = `<span style="font-size: 20px;">➕</span><br><small>Import</small>`;
+  const plusSpan = document.createElement('span');
+  plusSpan.style.fontSize = '20px';
+  plusSpan.textContent = '➕';
+  customDiv.appendChild(plusSpan);
+  customDiv.appendChild(document.createElement('br'));
+  const smallText = document.createElement('small');
+  smallText.textContent = 'Import';
+  customDiv.appendChild(smallText);
   customDiv.addEventListener('click', () => {
     document.getElementById('faviconUpload').click();
   });
@@ -74,7 +81,19 @@ document.addEventListener('DOMContentLoaded', function() {
   DEFAULT_EMOJIS.forEach(({ emoji, name }) => {
     const div = document.createElement('div');
     div.className = 'emoji-item';
-    div.innerHTML = `${emoji}<br><small>${name}</small>`;
+    // Add emoji
+    const emojiSpan = document.createElement('span');
+    emojiSpan.textContent = emoji;
+    div.appendChild(emojiSpan);
+    
+    // Add line break
+    div.appendChild(document.createElement('br'));
+    
+    // Add name in small text
+    const nameSpan = document.createElement('small');
+    nameSpan.textContent = name;
+    div.appendChild(nameSpan);
+    
     div.addEventListener('click', () => {
       document.querySelectorAll('.emoji-item').forEach(item => item.classList.remove('selected'));
       div.classList.add('selected');
@@ -107,7 +126,22 @@ document.addEventListener('DOMContentLoaded', function() {
       const reader = new FileReader();
       reader.onload = function(e) {
         const customBox = document.querySelector('.custom-upload');
-        customBox.innerHTML = `<img src="${e.target.result}" style="width: 24px; height: 24px;"><br><small>Import</small>`;
+        customBox.textContent = ''; // Clear existing content
+        
+        // Create and add the image
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.style.width = '24px';
+        img.style.height = '24px';
+        customBox.appendChild(img);
+        
+        // Add line break
+        customBox.appendChild(document.createElement('br'));
+        
+        // Add "Import" label
+        const importLabel = document.createElement('small');
+        importLabel.textContent = 'Import';
+        customBox.appendChild(importLabel);
       };
       reader.readAsDataURL(this.files[0]);
     }
@@ -215,10 +249,16 @@ function loadRules() {
         'title': 'Title',
         'regex': 'RegEx'
       };
-      ruleContent.innerHTML = `
-        <strong>${typeDisplayNames[rule.matchType]}:</strong> ${rule.pattern}<br>
-        <strong>New Title:</strong> ${rule.newTitle}
-      `;
+      const typeLabel = document.createElement('strong');
+      typeLabel.textContent = `${typeDisplayNames[rule.matchType]}:`;
+      ruleContent.appendChild(typeLabel);
+      ruleContent.appendChild(document.createTextNode(` ${rule.pattern}`));
+      ruleContent.appendChild(document.createElement('br'));
+
+      const newTitleLabel = document.createElement('strong');
+      newTitleLabel.textContent = 'New Title:';
+      ruleContent.appendChild(newTitleLabel);
+      ruleContent.appendChild(document.createTextNode(` ${rule.newTitle}`));
 
       if (rule.favicon) {
         const faviconPreview = document.createElement('img');
@@ -347,15 +387,33 @@ function importRules(event) {
   reader.readAsText(file);
 }
 
+function resetCustomUploadBox() {
+  const customBox = document.querySelector('.custom-upload');
+  customBox.textContent = ''; // Clear existing content
+  
+  // Recreate the plus icon
+  const plusSpan = document.createElement('span');
+  plusSpan.style.fontSize = '20px';
+  plusSpan.textContent = '➕';
+  customBox.appendChild(plusSpan);
+  
+  // Add line break
+  customBox.appendChild(document.createElement('br'));
+  
+  // Add "Import" label
+  const smallText = document.createElement('small');
+  smallText.textContent = 'Import';
+  customBox.appendChild(smallText);
+}
+
 function clearInputs() {
   document.getElementById('pattern').value = '';
   document.getElementById('newTitle').value = '';
   document.getElementById('faviconUpload').value = '';
   document.querySelectorAll('.emoji-item').forEach(item => item.classList.remove('selected'));
   delete document.getElementById('addRule').dataset.selectedEmoji;
-  // Reset the custom upload box to show the plus icon
-  const customBox = document.querySelector('.custom-upload');
-  customBox.innerHTML = `<span style="font-size: 20px;">➕</span><br><small>Import</small>`;
+  // Reset the custom upload box
+  resetCustomUploadBox();
 }
 
 function toggleRule(id) {

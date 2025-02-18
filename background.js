@@ -6,6 +6,66 @@ function escapeJavaScript(string) {
   return string.replace(/["\\]/g, '\\$&');
 }
 
+function applyRule(rule, tab) {
+  const escapedTitle = escapeJavaScript(rule.newTitle);
+  browser.tabs.executeScript(tab.id, {
+    code: `
+      // Set initial title
+      document.title = "${escapedTitle}";
+      
+      // Create observer to watch for title changes
+      const titleObserver = new MutationObserver(() => {
+        if (document.title !== "${escapedTitle}") {
+          document.title = "${escapedTitle}";
+        }
+      });
+      
+      // Start observing the title
+      titleObserver.observe(
+        document.querySelector('title') || document.head || document.documentElement,
+        { subtree: true, childList: true, characterData: true }
+      );
+      
+      ${rule.favicon ? `
+        // Function to ensure our favicon is set
+        function setFavicon() {
+          let favicon = document.querySelector("link[rel*='icon']") || document.createElement('link');
+          if (favicon.href !== "${rule.favicon}") {
+            favicon.type = 'image/x-icon';
+            favicon.rel = 'shortcut icon';
+            favicon.href = "${rule.favicon}";
+            document.head.appendChild(favicon);
+          }
+        }
+
+        // Set initial favicon
+        setFavicon();
+        
+        // Create observer to watch for favicon changes
+        const faviconObserver = new MutationObserver((mutations) => {
+          for (const mutation of mutations) {
+            if (mutation.type === 'childList') {
+              const icons = document.querySelectorAll("link[rel*='icon']");
+              for (const icon of icons) {
+                if (icon.href !== "${rule.favicon}") {
+                  setFavicon();
+                  break;
+                }
+              }
+            }
+          }
+        });
+        
+        // Start observing the head for favicon changes
+        faviconObserver.observe(document.head, {
+          childList: true,
+          subtree: true
+        });
+      ` : ''}
+    `
+  });
+}
+
 browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
   if (changeInfo.status === 'complete' && tab.url) {
     browser.storage.local.get('rules', function(data) {
@@ -41,19 +101,7 @@ browser.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
         }
 
         if (matches) {
-          const escapedTitle = escapeJavaScript(rule.newTitle);
-          browser.tabs.executeScript(tabId, {
-            code: `
-              document.title = "${escapedTitle}";
-              ${rule.favicon ? `
-                let favicon = document.querySelector("link[rel*='icon']") || document.createElement('link');
-                favicon.type = 'image/x-icon';
-                favicon.rel = 'shortcut icon';
-                favicon.href = "${rule.favicon}";
-                document.head.appendChild(favicon);
-              ` : ''}
-            `
-          });
+          applyRule(rule, tab);
           break;
         }
       }
