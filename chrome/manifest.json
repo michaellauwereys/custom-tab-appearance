@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Custom Tab Appearance",
+  "version": "1.1",
+  "description": "Customize website titles and favicons based on rules",
+  "author": "Michaël Lauwereys",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_title": "Custom Tab Appearance Settings",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
+  }
+} 

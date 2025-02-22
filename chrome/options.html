@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Tab Appearance</title>
+  <link rel="icon" type="image/png" href="icons/icon-48.png">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Custom Tab Appearance</h2>
+    
+    <div class="add-rule">
+      <h3>Add New Rule</h3>
+      <select id="matchType">
+        <option value="domain">Domain</option>
+        <option value="title">Title</option>
+        <option value="regex">RegEx</option>
+      </select>
+      <input type="text" id="pattern" placeholder="Match pattern">
+      <input type="text" id="newTitle" placeholder="New title">
+      <div class="favicon-selector">
+        <button class="collapsible">Choose Favicon</button>
+        <div class="collapsible-content">
+          <div class="emoji-grid">
+            <input type="file" id="faviconUpload" accept="image/*" style="display: none;">
+            <!-- Default emoji options will be added by JavaScript -->
+          </div>
+        </div>
+      </div>
+      <button id="addRule">Add Rule</button>
+    </div>
+
+    <div class="rules-list">
+      <h3>Current Rules</h3>
+      <div class="rules-categories">
+        <div class="rules-category">
+          <h4>Enabled Rules</h4>
+          <div id="enabledRules" class="rules-container"></div>
+        </div>
+        <div class="rules-category">
+          <h4>Disabled Rules</h4>
+          <div id="disabledRules" class="rules-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="import-export">
+      <button id="exportRules">Export Rules</button>
+      <button class="import-button">
+        Import Rules
+        <input type="file" id="importRules" accept=".json" style="display: none;">
+      </button>
+      <div style="flex: 1"></div>
+      <button id="removeAllRules" class="delete-button">Remove All Rules</button>
+    </div>
+  </div>
+  <!-- Custom confirmation modal -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <h4>Confirm Delete</h4>
+      <p>Are you sure you want to remove all rules? This cannot be undone.</p>
+      <div class="modal-buttons">
+        <button id="confirmDelete" class="delete-button">Remove All</button>
+        <button id="cancelDelete">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <!-- Alert modal -->
+  <div id="alertModal" class="modal">
+    <div class="modal-content">
+      <h4 id="alertTitle">Notice</h4>
+      <p id="alertMessage"></p>
+      <div class="modal-buttons">
+        <button id="alertOk">OK</button>
+      </div>
+    </div>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

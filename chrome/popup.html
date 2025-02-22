@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Custom Tab Appearance</h2>
+    
+    <div class="add-rule">
+      <h3>Add New Rule</h3>
+      <select id="matchType">
+        <option value="domain">Domain</option>
+        <option value="title">Tab Title</option>
+        <option value="regex">Regex</option>
+      </select>
+      <input type="text" id="pattern" placeholder="Match pattern">
+      <input type="text" id="newTitle" placeholder="New title">
+      <input type="file" id="faviconUpload" accept="image/*">
+      <button id="addRule">Add Rule</button>
+    </div>
+
+    <div class="rules-list">
+      <h3>Current Rules</h3>
+      <div id="rulesList"></div>
+    </div>
+
+    <div class="import-export">
+      <button id="exportRules">Export Rules</button>
+      <input type="file" id="importRules" accept=".json">
+      <button id="importButton">Import Rules</button>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html> 
