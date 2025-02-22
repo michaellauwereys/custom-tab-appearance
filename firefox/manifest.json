@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Custom Tab Appearance",
-  "version": "1.0",
+  "version": "1.1",
   "description": "Customize website titles and favicons based on rules",
   "author": "Michaël Lauwereys",
   "developer": {
